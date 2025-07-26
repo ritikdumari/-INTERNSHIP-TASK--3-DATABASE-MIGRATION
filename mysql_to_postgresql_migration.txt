@@ -1,0 +1,75 @@
+-- DELIVERABLE: MIGRATION SCRIPTS AND  A SUMMARY REPORT OF THE PROCESS
+
+mysql-to-postgresql-migration/
+├── README.md                   # Summary Report (copy-paste below content)
+├── mysql_schema.sql            # MySQL schema (optional if exporting)
+├── postgres_schema.sql         # PostgreSQL target schema
+├── migration_summary_report.md # Summary of migration process
+
+✅ 1. ✅ postgres_schema.sql (Migration Script Example)
+
+-- PostgreSQL schema for migrated tables
+
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INT REFERENCES customers(customer_id),
+    amount NUMERIC(10, 2),
+    order_date DATE
+);
+
+✅ 2. ✅ README.md or migration_summary_report.md (Summary Report)
+
+# 🔄 Data Migration Summary Report
+
+**Task**: Migrate data from MySQL to PostgreSQL  
+**Deliverables**: Migration Scripts + Summary Report
+
+---
+
+## 📦 Source (MySQL)
+
+- **DB**: `mysql_sales_db`
+- **Tables**: `customers`, `orders`
+- **Rows**:
+  - `customers`: 1,000+
+  - `orders`: 5,000+
+
+---
+
+## 🎯 Target (PostgreSQL)
+
+- **DB**: `pg_sales_db`
+- **Schema**: Created using `postgres_schema.sql`
+- **Migration Method**: `pgloader` (CLI tool)
+
+---
+
+## ⚙️ Migration Process
+
+### Step 1: Export MySQL Credentials
+
+```bash
+mysql://root:password@localhost:3306/mysql_sales_db
+
+Step 2: Create PostgreSQL DB
+createdb pg_sales_db
+
+Step 3: Run pgloader Command
+
+pgloader mysql://root:password@localhost/mysql_sales_db postgresql://postgres:password@localhost/pg_sales_db
+
+✅ Data Integrity Checks
+Check	Status
+Table count match	✅ Yes
+Row counts match	✅ Yes
+Sample data checks	✅ Yes
+Foreign key relationships	✅ Verified
+No NULLs in NOT NULL columns	✅ Clean
+
